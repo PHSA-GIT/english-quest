@@ -58,9 +58,9 @@ footer{margin-top:20px;color:var(--muted);font-size:.7rem;text-align:center}
 @media(max-width:760px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}.shell{padding:14px 10px 35px}.card{padding:12px}}
 @media(max-width:380px){.reward-grid{grid-template-columns:1fr}.mission{grid-template-columns:24px 1fr}.mission .xp{grid-column:2}}
 
-/* Caderno integrado */
-.notebook{margin-top:22px}.nb-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.nb-tabs button{font-size:.75rem;padding:.55rem}.nb-tabs button.active{background:#14532d;border-color:#86efac;color:#f0fdf4}.nb-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;margin-bottom:12px}.nb-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.nb-item{background:#172233;border:1px solid var(--line);border-radius:5px;padding:12px;min-width:0}.nb-item h3{color:var(--green);overflow-wrap:anywhere}.nb-item p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.82rem;margin:7px 0}.nb-meta{color:var(--muted);font-size:.7rem;margin-bottom:7px}.nb-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;padding:12px;border:1px dashed var(--line);border-radius:5px}.nb-form .wide{grid-column:1/-1}.nb-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.nb-check{display:flex;gap:8px;align-items:center;padding:8px;background:#172233;border:1px solid var(--line);border-radius:4px}.nb-check label{margin:0;color:var(--text);font-size:.8rem}.nb-link{color:var(--blue);overflow-wrap:anywhere}.nb-help{font-size:.75rem;color:var(--muted);line-height:1.6}.nb-empty{padding:20px;text-align:center;color:var(--muted);border:1px dashed var(--line);grid-column:1/-1}
-@media(max-width:650px){.nb-list,.nb-checks{grid-template-columns:1fr}.nb-toolbar{grid-template-columns:1fr}.nb-form{grid-template-columns:1fr}.nb-form .wide{grid-column:auto}}
+/* Caderno, mascotes e jornada */
+.quest-extra{margin-top:18px}.notebook-layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:12px}.notebook-nav{display:grid;gap:6px;align-content:start}.notebook-nav button{text-align:left;background:#172233}.notebook-nav button.active{background:#14532d;border-color:#86efac}.notebook-page{min-width:0}.notebook-page[hidden]{display:none}.notebook-page h3{color:var(--pink);font-size:1rem}.notebook-list{display:grid;gap:8px}.notebook-entry{border:1px solid var(--line);background:#172233;padding:10px;border-radius:4px}.notebook-entry strong{color:var(--green)}.pet-row{display:flex;gap:8px;flex-wrap:wrap}.pet-choice{min-width:95px;flex:1;text-align:center}.pet-choice.selected{border-color:var(--green);background:#14532d}.pet-emoji{font-size:2rem;display:block}.journey-track{display:grid;gap:8px}.journey-stop{border:1px solid var(--line);padding:10px;border-radius:4px;background:#172233;display:flex;gap:10px;align-items:center}.journey-stop.unlocked{border-color:#22c55e;background:#143027}.journey-stop .stop-icon{font-size:1.5rem}.notebook-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.notebook-actions>*{flex:1}.mini-note{font-size:.72rem;color:var(--muted)}
+@media(max-width:620px){.notebook-layout{grid-template-columns:1fr}.notebook-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.notebook-nav button{text-align:center}}
 
 </style>
 </head>
@@ -126,11 +126,40 @@ footer{margin-top:20px;color:var(--muted);font-size:.7rem;text-align:center}
   </aside>
  </div>
 
- <section class="card notebook" id="notebook">
-  <div class="section-head"><div><h2>📚 MEU CADERNO DE INGLÊS</h2><div class="subtitle">Seu material do Notion reunido aqui, junto com a sua quest.</div></div><span class="pill" id="nbCount">0 registros</span></div>
-  <div class="nb-tabs" id="nbTabs" role="tablist"></div>
-  <div id="nbPanel"></div>
-  <p class="nb-help" style="margin:14px 0 0">💾 O caderno é salvo junto com o progresso neste navegador. Use <b>Exportar backup JSON</b> acima para guardar tudo. Este arquivo funciona localmente; não publica seus dados na internet.</p>
+ <section class="card section quest-extra" id="companionsJourney">
+  <div class="section-head"><h2>🐾 MEU MASCOTE</h2><span class="pill" id="petBond">Laço: 0</span></div>
+  <p class="notice">Escolha seu companheiro de aventura. Ganhe XP nas missões para desbloquear novos mascotes. Clique no seu mascote para dar carinho!</p>
+  <div class="pet-row" id="petChoices">
+   <button class="pet-choice selected" data-pet="foxy"><span class="pet-emoji">🦊</span>Foxy <span class="mini-note">Disponível</span></button>
+   <button class="pet-choice" data-pet="mimi"><span class="pet-emoji">🐱</span>Mimi <span class="mini-note">100 XP</span></button>
+   <button class="pet-choice" data-pet="ollie"><span class="pet-emoji">🦉</span>Ollie <span class="mini-note">250 XP</span></button>
+   <button class="pet-choice" data-pet="pip"><span class="pet-emoji">🐉</span>Pip <span class="mini-note">500 XP</span></button>
+   <button class="pet-choice" data-pet="bubbles"><span class="pet-emoji">🩷</span>Bubbles <span class="mini-note">900 XP</span></button>
+  </div>
+  <div class="notebook-actions"><button id="petPatBtn" class="primary">💚 Dar carinho</button><span class="pill" id="petMessage">Foxy está feliz em te acompanhar!</span></div>
+ </section>
+ <section class="card section quest-extra">
+  <div class="section-head"><h2>🗺️ JORNADA DO INGLÊS</h2><span class="pill" id="journeyXP">0 XP</span></div>
+  <p class="notice">Cada missão concluída ajuda você a avançar no mapa. Seu progresso é calculado pelo XP do jogo.</p>
+  <div class="progress"><div id="journeyProgressFill"></div></div><div class="subtitle" id="journeyProgressText">Próxima parada: Floresta das Palavras</div>
+  <div class="journey-track" id="journeyStops" style="margin-top:12px"></div>
+ </section>
+ <section class="card section quest-extra" id="notebook">
+  <div class="section-head"><h2>📓 MEU CADERNO DE INGLÊS</h2><span class="pill">Seu espaço de estudo</span></div>
+  <p class="notice">Use as abas para guardar palavras, regras, erros e leituras. As anotações ficam salvas neste navegador e neste dispositivo.</p>
+  <div class="notebook-layout">
+   <nav class="notebook-nav" aria-label="Abas do caderno">
+    <button class="active" data-page="start">🏠 Ponto de partida</button><button data-page="dictionary">📖 Meu dicionário</button><button data-page="rules">🧠 Regrinhas</button><button data-page="diary">📅 Diário de estudo</button><button data-page="errors">🔧 Meus erros</button><button data-page="speaking">🗣️ Speaking</button><button data-page="reading">📚 Leituras</button><button data-page="goals">🎯 Metas</button>
+   </nav>
+   <div class="notebook-page" id="page-start"><h3>Seu ponto de partida</h3><p>Você está no nível iniciante A1. O objetivo é aprender um pouco por dia, praticando palavras, frases, leitura e fala.</p><div class="notebook-entry"><strong>Como usar:</strong><ol><li>Guarde palavras novas no dicionário.</li><li>Escreva regras com exemplos simples.</li><li>Anote o que estudou no diário.</li><li>Registre erros para revisar depois.</li></ol></div></div>
+   <div class="notebook-page" id="page-dictionary" hidden><h3>📖 Meu dicionário</h3><div class="form-grid"><div><label for="dictWord">Palavra ou expressão em inglês</label><input id="dictWord" placeholder="e.g. to wake up"></div><div><label for="dictMeaning">Significado em português</label><input id="dictMeaning" placeholder="acordar"></div><div class="wide"><label for="dictExample">Exemplo em inglês</label><input id="dictExample" placeholder="I wake up at seven."></div><div class="wide"><label for="dictDate">Data</label><input id="dictDate" type="date"></div></div><div class="notebook-actions"><button class="primary" id="addDict">＋ Salvar palavra</button><input id="dictSearch" placeholder="Pesquisar palavra..."></div><div class="notebook-list" id="dictList" style="margin-top:12px"></div></div>
+   <div class="notebook-page" id="page-rules" hidden><h3>🧠 Regrinhas importantes</h3><div class="form-grid"><div class="wide"><label for="ruleTitle">Nome da regra</label><input id="ruleTitle" placeholder="Ex.: Like + verbo com -ing"></div><div class="wide"><label for="ruleText">Explicação com suas palavras</label><textarea id="ruleText" rows="3" placeholder="Explique de um jeito simples..."></textarea></div><div class="wide"><label for="ruleExample">Exemplo</label><input id="ruleExample" placeholder="I like reading."></div></div><div class="notebook-actions"><button class="primary" id="addRule">＋ Salvar regra</button></div><div class="notebook-list" id="ruleList" style="margin-top:12px"></div></div>
+   <div class="notebook-page" id="page-diary" hidden><h3>📅 Diário de estudo</h3><label for="diaryDate">Data</label><input id="diaryDate" type="date"><label for="diaryText" style="margin-top:8px">O que estudei hoje? O que foi fácil ou difícil?</label><textarea id="diaryText" rows="4" placeholder="Hoje aprendi... Ainda tenho dúvida em..."></textarea><div class="notebook-actions"><button class="primary" id="saveDiary">Salvar diário</button></div><div class="notebook-list" id="diaryList" style="margin-top:12px"></div></div>
+   <div class="notebook-page" id="page-errors" hidden><h3>🔧 Meus erros</h3><label for="errorWrong">Frase que eu escrevi</label><input id="errorWrong" placeholder="I going to my home"><label for="errorCorrect" style="margin-top:8px">Correção</label><input id="errorCorrect" placeholder="I am going home"><label for="errorWhy" style="margin-top:8px">Por que estava errado?</label><textarea id="errorWhy" rows="2" placeholder="Anote a explicação..."></textarea><div class="notebook-actions"><button class="primary" id="addError">＋ Registrar erro</button></div><div class="notebook-list" id="errorList" style="margin-top:12px"></div></div>
+   <div class="notebook-page" id="page-speaking" hidden><h3>🗣️ Speaking practice</h3><label for="speakPrompt">Pergunta ou tema</label><input id="speakPrompt" placeholder="What do you do in the morning?"><label for="speakAnswer" style="margin-top:8px">Minha resposta em inglês</label><textarea id="speakAnswer" rows="3" placeholder="I listen to music in the morning."></textarea><label for="speakDate" style="margin-top:8px">Data</label><input id="speakDate" type="date"><div class="notebook-actions"><button class="primary" id="addSpeak">＋ Salvar prática</button></div><div class="notebook-list" id="speakList" style="margin-top:12px"></div></div>
+   <div class="notebook-page" id="page-reading" hidden><h3>📚 Leituras</h3><div class="form-grid"><div class="wide"><label for="readTitle">Título do livro ou texto</label><input id="readTitle" placeholder="The Secret Garden"></div><div><label for="readPages">Páginas lidas</label><input id="readPages" type="number" min="0" placeholder="5"></div><div><label for="readDate">Data</label><input id="readDate" type="date"></div><div class="wide"><label for="readNotes">Palavras novas / resumo</label><textarea id="readNotes" rows="3" placeholder="Anote o que entendeu..."></textarea></div></div><div class="notebook-actions"><button class="primary" id="addRead">＋ Salvar leitura</button></div><div class="notebook-list" id="readList" style="margin-top:12px"></div></div>
+   <div class="notebook-page" id="page-goals" hidden><h3>🎯 Metas de inglês</h3><label for="goalText">Minha próxima meta</label><input id="goalText" placeholder="Ler 2 páginas de um livro A1"><div class="notebook-actions"><button class="primary" id="addGoal">＋ Adicionar meta</button><button id="exportNotes">⬇ Exportar caderno</button><button id="importNotesBtn">⬆ Importar caderno</button><input id="importNotes" type="file" accept="application/json,.json" hidden></div><div class="notebook-list" id="goalList" style="margin-top:12px"></div></div>
+  </div>
  </section>
 
  <footer>MADE FOR YOUR NEXT LEVEL · Estude um pouquinho, volte amanhã e continue a quest.</footer>
@@ -186,43 +215,14 @@ let state, storageMode='local';
 let editingMissionId=null;
 function dateKey(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function dateLabel(key,opts={day:'2-digit',month:'short',year:'numeric'}){const [y,m,d]=key.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('pt-BR',opts)}
-const notebookSections=[
- {id:'start',label:'🎯 Ponto de partida',title:'Meu ponto de partida',hint:'Nível atual, objetivo, meta mensal e próxima ação.'},
- {id:'learning',label:'📘 Aprendendo',title:'O que estou aprendendo agora',hint:'Conteúdo atual, datas, progresso, exemplos e dúvidas.'},
- {id:'dictionary',label:'📖 Dicionário',title:'Meu dicionário pessoal',hint:'Palavras novas, pronúncia, exemplo, tradução e revisão.'},
- {id:'diary',label:'🗓️ Diário',title:'Diário de estudos',hint:'Registre tempo de estudo, dificuldades, aprendizados e próxima ação.'},
- {id:'rules',label:'🧠 Regras',title:'Regras importantes',hint:'Gramática, estruturas, perguntas, negativas, tempos, preposições e pronúncia.'},
- {id:'errors',label:'✍️ Erros',title:'Meus erros e correções',hint:'Guarde a frase original, a correção e o motivo.'},
- {id:'speaking',label:'🎧 Speaking',title:'Speaking e Listening',hint:'Áudios, frases faladas, pronúncia difícil e compreensão auditiva.'},
- {id:'reading',label:'📚 Leituras',title:'Leituras em inglês',hint:'Livro, nível, capítulo, resumo, palavras e trechos difíceis.'},
- {id:'reviews',label:'🔁 Revisões',title:'Revisões programadas',hint:'Organize revisões para amanhã, 3, 7 e 14 dias.'},
- {id:'goals',label:'🏁 Metas',title:'Metas e evolução',hint:'Metas diárias, checklist semanal e evolução.'},
- {id:'tips',label:'💡 Dicas',title:'Mural de dicas pessoais',hint:'Macetes de memória, explicações úteis e descobertas.'},
- {id:'materials',label:'📎 Materiais',title:'Anexos e materiais',hint:'Links, PDFs e outros materiais de estudo.'}
-];
-function seedNotebook(){return {
- start:[{id:'seed-start',title:'Meu ponto de partida',details:'Nível atual: A1 — começando do zero\nObjetivo: C2\nMeta mensal: ler um livro em inglês\nFoco atual: aprender a falar sobre rotina diária\nPróxima ação: estudar Daily Routines',date:'2026-10-28',tag:'perfil'}],
- learning:[{id:'seed-learning',title:'Daily routines and free time',details:'Início: 22/10/2026\nO que preciso aprender: My day in English\nProgresso anotado: 2/10\nExplicação: frases usadas no dia a dia em inglês\nExemplo: I go to bed.\nTradução: Eu vou para a cama / vou dormir.\nDúvida: tempo das frases\nPrática: usar no meu dia a dia\nJá aprendi: frases bem básicas',date:'2026-10-22',tag:'em andamento'}],
- dictionary:[
- {id:'seed-word-come',title:'Come · verb',details:'Significado: vir\nPronúncia anotada: kʌm\nExemplo: Come here.\nTradução: Vem aqui.',date:'2026-10-28',tag:'palavra'},
- {id:'seed-word-want',title:'Want · verb',details:'Significado: querer\nPronúncia anotada: uónt\nExemplo: I want water.\nTradução: Eu quero água.',date:'2026-10-28',tag:'palavra'},
- {id:'seed-word-when',title:'When · adv.',details:'Significado: quando\nPronúncia anotada: uén\nExemplo: When is your birthday?\nTradução: Quando é seu aniversário?',date:'2026-10-28',tag:'palavra'},
- {id:'seed-word-there',title:'There',details:'Significado anotado: lá\nExemplo: I’m going there now.\nTradução: Eu estou indo lá agora.',date:'2026-10-28',tag:'palavra'}],
- diary:[{id:'seed-diary',title:'Sessão de estudo',details:'Duração: 20 minutos\nEstudei: palavras novas\nAprendi: Come, Want, When\nMaior dificuldade: perguntas com WH\nFinalmente entendi: Come\nRevisar: Want e When\nAutoavaliação: 6/10\nPróxima ação: revisar as palavras',date:'2026-10-28',tag:'20 min'}],
- rules:[{id:'seed-going',title:'Going · ação em andamento',details:'Minha anotação: Going se usa quando está fazendo a ação no momento.\nExemplo: I’m going to school.\nTradução: Eu estou indo para a escola.\nProgresso anotado: 2/10',date:'2026-10-28',tag:'going'}, {id:'seed-going-home',title:'Going + home / there',details:'Minha anotação: com home, there etc., não colocamos o “to” depois de going.\nExemplos: I’m going home. / I’m going there.\nTradução: Estou indo para casa. / Estou indo para lá.\nProgresso anotado: 6/10',date:'2026-10-28',tag:'going'}],
- errors:[], speaking:[], reading:[{id:'seed-reading',title:'O Pequeno Príncipe',details:'Nível: A1–A2\nCapítulo/página: 00\nStatus anotado: 00\nO que li hoje: ainda não preenchido\nO que entendi: ainda não preenchido\nPalavras novas: ainda não preenchido\nTrechos difíceis: ainda não preenchido\nResumo em português: ainda não preenchido',date:'2026-10-28',tag:'leitura'}],
- reviews:[{id:'seed-review',title:'When e Want',details:'Aprendidas em: 28/10/2026\nRevisão: 3 dias\nResultado: ainda não preenchido',date:'2026-10-28',tag:'3 dias'}],
- goals:[{id:'seed-goal',title:'Meta mensal',details:'Ler um livro em inglês.\nMeta diária: estudar um pouco todos os dias.\nMeta semanal: vocabulário, gramática, escrever frases, pronúncia, listening, leitura e revisar conteúdo antigo.',date:'2026-10-28',tag:'metas'}],
- tips:[],materials:[{id:'seed-material',title:'Material compartilhado',details:'https://share.google/LXXqhfKaltVXMIplY',date:'2026-10-28',tag:'link'}]
-}}
-function fresh(){return {version:1,missions:structuredClone(defaultMissions),rewards:structuredClone(defaultRewards),days:{},lastSeen:dateKey(),rewardClaims:{},notebook:seedNotebook()}}
+function fresh(){return {version:1,missions:structuredClone(defaultMissions),rewards:structuredClone(defaultRewards),days:{},lastSeen:dateKey(),rewardClaims:{}}}
 function load(){
  try{
   const raw=localStorage.getItem(KEY);
-  if(!raw){state=fresh();save(false);checkDay();render();return}
+  if(!raw){state=fresh();save(false);return}
   const parsed=JSON.parse(raw);
   if(!parsed||parsed.version!==1||!parsed.days||!Array.isArray(parsed.missions))throw new Error('backup inválido');
-  const base=fresh();state={...base,...parsed,missions:parsed.missions,rewards:Array.isArray(parsed.rewards)?parsed.rewards:structuredClone(defaultRewards),days:parsed.days,rewardClaims:parsed.rewardClaims||{},notebook:{...base.notebook,...(parsed.notebook||{})}};notebookSections.forEach(sec=>{if(!Array.isArray(state.notebook[sec.id]))state.notebook[sec.id]=base.notebook[sec.id]||[]});
+  state={...fresh(),...parsed,missions:parsed.missions,rewards:Array.isArray(parsed.rewards)?parsed.rewards:structuredClone(defaultRewards),days:parsed.days,rewardClaims:parsed.rewardClaims||{}};
  }catch(e){
   state=fresh();
   storageMode='memory';
@@ -272,32 +272,7 @@ function render(){
  $('streak').textContent=streak();$('missionCount').textContent=`${done}/${missions.length}`;$('levelText').textContent=`Nível ${lvl.n} · ${lvl.name}`;
  const pct=missions.length?Math.round(done/missions.length*100):0;$('progressFill').style.width=pct+'%';$('progressText').textContent=`${pct}% concluído · ${missions.length-done} missão(ões) restante(s)`;
  $('missionList').innerHTML=missions.length?missions.map(m=>`<label class="mission ${day.completed[m.id]?'done':''}" style="margin:0"><input type="checkbox" data-check="${escapeHTML(m.id)}" ${day.completed[m.id]?'checked':''} aria-label="Concluir ${escapeHTML(m.name)}"><span><span class="mission-name">${escapeHTML(m.name)}</span><div class="mission-meta">${m.kind==='fixed'?'MISSÃO FIXA':'MISSÃO PERSONALIZADA'}</div></span><span class="xp">+${Number(m.xp)||0} XP</span></label>`).join(''):'<div class="empty">Nenhuma missão ativa. Adicione uma ou reative metas no editor.</div>';
- renderRewards();renderHistory();renderMissionEditor();renderNotebook();updateStorageInfo();
-}
-let activeNotebookSection='start';
-function nbTotal(){return notebookSections.reduce((n,sec)=>n+(state.notebook[sec.id]||[]).length,0)}
-function renderNotebook(){
- const tabs=$('nbTabs');tabs.innerHTML=notebookSections.map(sec=>`<button type="button" class="${activeNotebookSection===sec.id?'active':''}" data-nb-tab="${sec.id}" role="tab" aria-selected="${activeNotebookSection===sec.id}">${sec.label}</button>`).join('');
- $('nbCount').textContent=nbTotal()+' registros';
- const sec=notebookSections.find(x=>x.id===activeNotebookSection)||notebookSections[0],items=state.notebook[sec.id]||[];
- const isGoals=sec.id==='goals';
- $('nbPanel').innerHTML=`<div><h3>${sec.title}</h3><p class="nb-help">${sec.hint}</p></div>
- <div class="nb-toolbar"><input id="nbSearch" type="search" placeholder="🔎 Buscar nesta aba..." aria-label="Buscar no caderno"><button type="button" id="nbAddToggle" class="primary">＋ Adicionar registro</button></div>
- ${isGoals?`<div class="card" style="box-shadow:none;margin-bottom:12px"><h3>Checklist semanal</h3><div class="nb-checks">${['Vocabulário','Gramática','Escrever frases em inglês','Pronúncia','Listening','Leitura','Revisar conteúdo antigo'].map((label,i)=>`<div class="nb-check"><input type="checkbox" data-week="${i}" id="week${i}" ${state.notebook.weekly?.[i]?'checked':''}><label for="week${i}">${label}</label></div>`).join('')}</div></div>`:''}
- <form id="nbForm" class="nb-form" hidden>
-  <div class="wide"><label for="nbTitle">Título</label><input id="nbTitle" maxlength="140" required placeholder="Ex.: Present simple"></div>
-  <div><label for="nbDate">Data</label><input id="nbDate" type="date" value="${dateKey()}"></div>
-  <div><label for="nbTag">Categoria / status</label><input id="nbTag" maxlength="60" placeholder="Ex.: revisar, novo, A1"></div>
-  <div class="wide"><label for="nbDetails">Anotações, exemplo, tradução, dúvidas...</label><textarea id="nbDetails" rows="6" maxlength="12000" placeholder="Escreva aqui tudo o que quiser guardar"></textarea></div>
-  <div class="wide actions"><button type="button" id="nbCancel">Cancelar</button><button class="primary" type="submit">Salvar no caderno</button></div>
- </form>
- <div class="nb-list" id="nbItems">${items.length?items.map(item=>`<article class="nb-item"><h3>${escapeHTML(item.title||'Sem título')}</h3><div class="nb-meta">${item.date?escapeHTML(item.date):'Sem data'}${item.tag?' · '+escapeHTML(item.tag):''}</div><p>${escapeHTML(item.details||'Sem anotações ainda.')}</p>${/^https?:\/\//i.test(item.details||'')?`<p><a class="nb-link" href="${escapeHTML(item.details.trim())}" target="_blank" rel="noopener noreferrer">Abrir link ↗</a></p>`:''}<div class="actions"><button type="button" class="small" data-nb-edit="${escapeHTML(item.id)}">Editar</button><button type="button" class="small danger" data-nb-delete="${escapeHTML(item.id)}">Excluir</button></div></article>`).join(''):'<div class="nb-empty">Ainda não há registros nesta aba. Clique em “Adicionar registro” para começar.</div>'}</div>`;
- const form=$('nbForm');$('nbAddToggle').addEventListener('click',()=>{form.hidden=false;$('nbTitle').focus()});$('nbCancel').addEventListener('click',()=>{form.reset();form.hidden=true;$('nbDate').value=dateKey();delete form.dataset.editing});
- $('nbSearch').addEventListener('input',()=>{const q=$('nbSearch').value.trim().toLocaleLowerCase('pt-BR');$('nbItems').querySelectorAll('.nb-item').forEach(card=>card.hidden=!card.textContent.toLocaleLowerCase('pt-BR').includes(q))});
- form.addEventListener('submit',e=>{e.preventDefault();const title=$('nbTitle').value.trim();if(!title)return;const list=state.notebook[sec.id]||(state.notebook[sec.id]=[]),editing=form.dataset.editing;const item={id:editing||('nb_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7)),title,details:$('nbDetails').value.trim(),date:$('nbDate').value,tag:$('nbTag').value.trim()};if(editing){const i=list.findIndex(x=>x.id===editing);if(i>=0)list[i]=item;else list.unshift(item)}else list.unshift(item);delete form.dataset.editing;save();render();toast('Registro salvo no caderno! 📚')});
- $('nbItems').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const list=state.notebook[sec.id]||[];if(b.dataset.nbDelete){const item=list.find(x=>x.id===b.dataset.nbDelete);if(item&&confirm(`Excluir “${item.title}” do caderno?`)){state.notebook[sec.id]=list.filter(x=>x.id!==b.dataset.nbDelete);save();renderNotebook();toast('Registro excluído.')}}if(b.dataset.nbEdit){const item=list.find(x=>x.id===b.dataset.nbEdit);if(!item)return;form.hidden=false;form.dataset.editing=item.id;$('nbTitle').value=item.title||'';$('nbDetails').value=item.details||'';$('nbDate').value=item.date||'';$('nbTag').value=item.tag||'';$('nbTitle').focus();form.scrollIntoView({behavior:'smooth',block:'nearest'})}});
- $('nbTabs').querySelectorAll('[data-nb-tab]').forEach(b=>b.addEventListener('click',()=>{activeNotebookSection=b.dataset.nbTab;renderNotebook()}));
- $('nbPanel').querySelectorAll('[data-week]').forEach(input=>input.addEventListener('change',()=>{state.notebook.weekly=state.notebook.weekly||{};state.notebook.weekly[input.dataset.week]=input.checked;save();toast('Checklist semanal atualizado!')}));
+ renderRewards();renderHistory();renderMissionEditor();updateStorageInfo();
 }
 function todayXP(){return xpForDay(dateKey())}
 function unlocked(r){
@@ -378,14 +353,14 @@ $('importFile').addEventListener('change',async e=>{
  const file=e.target.files?.[0];if(!file)return;
  try{const incoming=JSON.parse(await file.text());if(!incoming||incoming.version!==1||!incoming.days||!Array.isArray(incoming.missions)||!Array.isArray(incoming.rewards))throw new Error();
  if(!confirm('Importar este backup substituirá o progresso atual. Continuar?'))return;
- const base=fresh();state={...base,...incoming,notebook:{...base.notebook,...(incoming.notebook||{})}};notebookSections.forEach(sec=>{if(!Array.isArray(state.notebook[sec.id]))state.notebook[sec.id]=base.notebook[sec.id]||[]});checkDay();save();render();toast('Backup importado!');}catch(err){alert('Não consegui ler esse backup. Selecione um JSON exportado pelo English Quest.')}finally{e.target.value=''}
+ state=incoming;checkDay();save();render();toast('Backup importado!');}catch(err){alert('Não consegui ler esse backup. Selecione um JSON exportado pelo English Quest.')}finally{e.target.value=''}
 });
 $('resetDayBtn').addEventListener('click',()=>{
  if(!confirm('Isso não apaga o histórico. Vai criar o dia de hoje (ou abrir o dia atual). Continuar?'))return;
  checkDay();save();render();toast('Dia atual atualizado!');
 });
 $('clearBtn').addEventListener('click',()=>{
- if(!confirm('Tem certeza? Isso apagará missões, XP, histórico, prêmios e TODO o caderno salvos neste navegador. Exporte um backup antes, se quiser guardar seus dados.'))return;
+ if(!confirm('Tem certeza? Isso apagará missões, XP, histórico e prêmios salvos neste navegador. Exporte um backup antes, se quiser guardar seus dados.'))return;
  state=fresh();save();render();toast('Dados reiniciados.');
 });
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){const before=state.lastSeen;checkDay();if(before!==state.lastSeen){save();render();toast('Novo dia! Missões renovadas 🌅')}}});
@@ -403,5 +378,38 @@ load();
 scheduleMidnightRefresh();
 })();
 </script>
+
+<script>
+(()=>{'use strict';
+const NOTE_KEY='englishQuestNotebook_v1',PET_KEY='englishQuestPets_v1';
+const $=id=>document.getElementById(id);const today=()=>new Date().toISOString().slice(0,10);
+let notes={dictionary:[],rules:[],diary:[],errors:[],speaking:[],reading:[],goals:[]};
+try{notes={...notes,...JSON.parse(localStorage.getItem(NOTE_KEY)||'{}')}}catch{}
+let pet={id:'foxy',bond:0};try{pet={...pet,...JSON.parse(localStorage.getItem(PET_KEY)||'{}')}}catch{}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function saveNotes(){localStorage.setItem(NOTE_KEY,JSON.stringify(notes))}
+function list(id,arr,renderer){$(id).innerHTML=arr.length?arr.slice().reverse().map((x,i)=>`<div class="notebook-entry">${renderer(x,arr.length-1-i)} <div style="margin-top:8px"><button class="small danger" data-remove="${id}" data-index="${arr.length-1-i}">Excluir</button></div></div>`).join(''):'<div class="empty">Nada anotado ainda. Adicione seu primeiro registro!</div>'}
+function renderNotes(){list('dictList',notes.dictionary,x=>`<strong>${esc(x.word)}</strong> — ${esc(x.meaning)}<div>${esc(x.example)}</div><div class="mini-note">${esc(x.date)}</div>`);list('ruleList',notes.rules,x=>`<strong>${esc(x.title)}</strong><div>${esc(x.text)}</div><em>${esc(x.example)}</em>`);list('diaryList',notes.diary,x=>`<strong>${esc(x.date)}</strong><div>${esc(x.text)}</div>`);list('errorList',notes.errors,x=>`<strong>Antes:</strong> ${esc(x.wrong)}<br><strong>Correção:</strong> ${esc(x.correct)}<div>${esc(x.why)}</div>`);list('speakList',notes.speaking,x=>`<strong>${esc(x.prompt)}</strong><div>${esc(x.answer)}</div><div class="mini-note">${esc(x.date)}</div>`);list('readList',notes.reading,x=>`<strong>${esc(x.title)}</strong> — ${esc(x.pages)} página(s)<div>${esc(x.notes)}</div><div class="mini-note">${esc(x.date)}</div>`);list('goalList',notes.goals,x=>`🎯 ${esc(x.text)} <button class="small" data-done-goal="${notes.goals.indexOf(x)}">Concluir</button>`)}
+$('dictDate').value=today();$('diaryDate').value=today();$('speakDate').value=today();$('readDate').value=today();
+document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.notebook-page').forEach(x=>x.hidden=x.id!=='page-'+b.dataset.page)}));
+$('addDict').addEventListener('click',()=>{const word=$('dictWord').value.trim();if(!word)return alert('Digite a palavra em inglês.');notes.dictionary.push({word,meaning:$('dictMeaning').value.trim(),example:$('dictExample').value.trim(),date:$('dictDate').value||today()});saveNotes();renderNotes();['dictWord','dictMeaning','dictExample'].forEach(id=>$(id).value='')});
+$('dictSearch').addEventListener('input',()=>{const q=$('dictSearch').value.toLowerCase();document.querySelectorAll('#dictList .notebook-entry').forEach(e=>e.hidden=!e.textContent.toLowerCase().includes(q))});
+$('addRule').addEventListener('click',()=>{const title=$('ruleTitle').value.trim();if(!title)return alert('Dê um nome para a regra.');notes.rules.push({title,text:$('ruleText').value.trim(),example:$('ruleExample').value.trim()});saveNotes();renderNotes();['ruleTitle','ruleText','ruleExample'].forEach(id=>$(id).value='')});
+$('saveDiary').addEventListener('click',()=>{const text=$('diaryText').value.trim();if(!text)return alert('Escreva alguma coisa no diário.');notes.diary.push({date:$('diaryDate').value||today(),text});saveNotes();renderNotes();$('diaryText').value=''});
+$('addError').addEventListener('click',()=>{const wrong=$('errorWrong').value.trim(),correct=$('errorCorrect').value.trim();if(!wrong||!correct)return alert('Preencha a frase original e a correção.');notes.errors.push({wrong,correct,why:$('errorWhy').value.trim()});saveNotes();renderNotes();['errorWrong','errorCorrect','errorWhy'].forEach(id=>$(id).value='')});
+$('addSpeak').addEventListener('click',()=>{const prompt=$('speakPrompt').value.trim(),answer=$('speakAnswer').value.trim();if(!answer)return alert('Escreva sua resposta em inglês.');notes.speaking.push({prompt,answer,date:$('speakDate').value||today()});saveNotes();renderNotes();$('speakPrompt').value='';$('speakAnswer').value=''});
+$('addRead').addEventListener('click',()=>{const title=$('readTitle').value.trim();if(!title)return alert('Digite o título da leitura.');notes.reading.push({title,pages:$('readPages').value||'0',date:$('readDate').value||today(),notes:$('readNotes').value.trim()});saveNotes();renderNotes();['readTitle','readPages','readNotes'].forEach(id=>$(id).value='')});
+$('addGoal').addEventListener('click',()=>{const text=$('goalText').value.trim();if(!text)return alert('Digite uma meta.');notes.goals.push({text,done:false});saveNotes();renderNotes();$('goalText').value=''});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(b){const map={dictList:'dictionary',ruleList:'rules',diaryList:'diary',errorList:'errors',speakList:'speaking',readList:'reading',goalList:'goals'};const arr=notes[map[b.dataset.remove]];arr.splice(Number(b.dataset.index),1);saveNotes();renderNotes()}const g=e.target.closest('[data-done-goal]');if(g){notes.goals.splice(Number(g.dataset.doneGoal),1);saveNotes();renderNotes()}});
+$('exportNotes').addEventListener('click',()=>{const a=document.createElement('a'),url=URL.createObjectURL(new Blob([JSON.stringify(notes,null,2)],{type:'application/json'}));a.href=url;a.download='english-quest-caderno.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});
+$('importNotesBtn').addEventListener('click',()=>$('importNotes').click());$('importNotes').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const v=JSON.parse(await f.text());for(const k of Object.keys(notes))if(Array.isArray(v[k]))notes[k]=v[k];saveNotes();renderNotes();alert('Caderno importado!')}catch{alert('Arquivo JSON inválido.')}e.target.value=''});
+const pets=[{id:'foxy',name:'Foxy',emoji:'🦊',xp:0,msg:'Foxy está feliz em te acompanhar!'},{id:'mimi',name:'Mimi',emoji:'🐱',xp:100,msg:'Mimi ronrona quando vocês estudam juntos!'},{id:'ollie',name:'Ollie',emoji:'🦉',xp:250,msg:'Ollie adora descobrir palavras novas!'},{id:'pip',name:'Pip',emoji:'🐉',xp:500,msg:'Pip está pronto para novas aventuras!'},{id:'bubbles',name:'Bubbles',emoji:'🩷',xp:900,msg:'Bubbles manda energia positiva para sua jornada!'}];
+function gameXP(){try{const st=JSON.parse(localStorage.getItem('englishQuestA1_v1')||'{}');return Object.entries(st.days||{}).reduce((sum,[k,d])=>sum+Object.entries(d.completed||{}).reduce((s,[id,done])=>s+(done?(Number(d.awardedXP?.[id])||Number(st.missions?.find(m=>m.id===id)?.xp)||0):0),0),0)}catch{return 0}}
+function renderPetJourney(){const xp=gameXP();$('journeyXP').textContent=xp+' XP';document.querySelectorAll('[data-pet]').forEach(b=>{const p=pets.find(p=>p.id===b.dataset.pet);b.classList.toggle('selected',pet.id===p.id);b.disabled=xp<p.xp;if(b.disabled)b.title='Desbloqueia com '+p.xp+' XP'});const current=pets.find(p=>p.id===pet.id)||pets[0];$('petBond').textContent='Laço: '+pet.bond;$('petMessage').textContent=current.msg;$('journeyStops').innerHTML=[{name:'Acampamento',emoji:'🏕️',xp:0},{name:'Floresta das Palavras',emoji:'🌲',xp:100},{name:'Ponte da Gramática',emoji:'🌉',xp:250},{name:'Biblioteca Antiga',emoji:'🏛️',xp:500},{name:'Montanha da Fluência',emoji:'🏔️',xp:900}].map((s,i,a)=>`<div class="journey-stop ${xp>=s.xp?'unlocked':''}"><span class="stop-icon">${s.emoji}</span><div><strong>${s.name}</strong><div class="mini-note">${xp>=s.xp?'✓ Desbloqueada':s.xp+' XP necessários'}</div></div></div>`).join('');const next=[{name:'Floresta das Palavras',xp:100},{name:'Ponte da Gramática',xp:250},{name:'Biblioteca Antiga',xp:500},{name:'Montanha da Fluência',xp:900}].find(s=>xp<s.xp);const prev=next?([{xp:0}, {xp:100},{xp:250},{xp:500}].filter(s=>s.xp<next.xp).slice(-1)[0].xp):900;$('journeyProgressFill').style.width=(next?Math.max(0,Math.min(100,(xp-prev)/(next.xp-prev)*100)):100)+'%';$('journeyProgressText').textContent=next?`Próxima parada: ${next.name} · faltam ${next.xp-xp} XP`:'🏆 Você chegou ao topo da jornada!'}
+document.querySelectorAll('[data-pet]').forEach(b=>b.addEventListener('click',()=>{pet.id=b.dataset.pet;localStorage.setItem(PET_KEY,JSON.stringify(pet));renderPetJourney()}));$('petPatBtn').addEventListener('click',()=>{pet.bond++;localStorage.setItem(PET_KEY,JSON.stringify(pet));renderPetJourney();$('petMessage').textContent='Carinho recebido! Seu mascote está feliz 💚'});
+renderNotes();renderPetJourney();window.addEventListener('focus',renderPetJourney);setInterval(renderPetJourney,5000);
+})();
+</script>
+
 </body>
 </html>
