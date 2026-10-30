@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>English Quest — Daily Missions</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
  --bg:#111827;--panel:#1f2937;--panel2:#263449;--line:#42516a;--text:#f3f4f6;
@@ -70,14 +71,20 @@ footer{margin-top:20px;color:var(--muted);font-size:.7rem;text-align:center}
 @keyframes petBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .pet-details{display:flex;flex-direction:column;gap:9px;border:2px solid #42516a;background:#172233;padding:12px}.pet-stat{display:flex;justify-content:space-between;gap:8px;font-size:.78rem;border-bottom:1px dashed #42516a;padding-bottom:7px}.pet-stat span{color:#aab6c8}.pet-details label{font-size:.75rem;color:#f9a8d4;font-weight:bold}.pet-details select{width:100%}
 .pet-details input,.pet-details select{width:100%;box-sizing:border-box}.pet-care-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.pet-meter{height:8px;background:#0b1220;border:1px solid #42516a;border-radius:8px;overflow:hidden;margin-top:4px}.pet-meter span{display:block;height:100%;width:50%;background:linear-gradient(90deg,#4ade80,#facc15);transition:width .2s}.pet-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.pet-actions button{padding:.55rem .35rem;font-size:.75rem}.pet-tag{display:inline-block;padding:3px 7px;border:1px solid #42516a;background:#111827;border-radius:4px;font-size:.7rem;color:#f9a8d4}@media(max-width:420px){.pet-care-grid{grid-template-columns:1fr}.pet-actions{grid-template-columns:1fr}}.pet-details input{background:#101827;border:1px solid #42516a;color:var(--text);padding:9px;border-radius:3px}.pet-custom-row{display:flex;gap:8px;flex-wrap:wrap}.pet-custom-row>*{flex:1}
-.pet-shop{margin-top:10px;padding:10px;border:1px solid #42516a;background:#111827}.pet-shop h3{margin:0 0 5px;color:#f9a8d4}.pet-shop-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:8px}.pet-shop-item{display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 5px;background:#172233;border:1px solid #42516a;border-radius:5px;text-align:center}.pet-shop-item>span{font-size:1.8rem}.pet-shop-item strong{font-size:.75rem}.pet-shop-item small{font-size:.65rem;color:#aab6c8}.pet-shop-item button{width:100%;padding:6px 3px;font-size:.68rem}.pet-shop-item button[data-use-food]{background:#14532d;border-color:#22c55e}@media(max-width:420px){.pet-shop-grid{grid-template-columns:1fr}}
 .journey-banner{display:flex;align-items:center;gap:12px;border:2px solid #42516a;background:#172233;padding:10px;margin-top:10px}.journey-banner>span{font-size:2rem}.journey-banner>div{flex:1;min-width:0}.journey-banner .progress{margin-bottom:0}
 .journey-map{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding:12px 0}.journey-map:before{content:"";position:absolute;left:8%;right:8%;top:44px;border-top:4px dashed #64748b;z-index:0}.journey-stop{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:8px 5px;border:2px solid #42516a;background:#172233;min-width:0;box-shadow:3px 3px 0 #080d17}.journey-stop.unlocked{border-color:#86efac;background:#143027}.journey-stop .stop-icon{display:grid;place-items:center;width:54px;height:54px;border:3px solid #64748b;background:#263449;font-size:1.7rem;box-shadow:3px 3px 0 #080d17}.journey-stop.unlocked .stop-icon{border-color:#86efac;background:#14532d}.journey-stop strong{font-size:.7rem;overflow-wrap:anywhere}.journey-stop .mini-note{font-size:.64rem}.journey-stop.current{outline:2px solid #facc15;outline-offset:2px}
 @media(max-width:620px){.pet-world{grid-template-columns:1fr}.journey-map{grid-template-columns:1fr;gap:7px}.journey-map:before{left:35px;right:auto;top:25px;bottom:25px;height:auto;border-top:0;border-left:4px dashed #64748b}.journey-stop{flex-direction:row;text-align:left;justify-content:flex-start;padding:8px}.journey-stop .stop-icon{flex-shrink:0}.journey-stop>div{flex:1}}
 
+
+#eqCloudGate{position:fixed;inset:0;z-index:99999;background:rgba(8,13,23,.97);display:grid;place-items:center;padding:18px;font-family:ui-monospace,monospace}
+#eqCloudCard{width:min(100%,440px);background:#1f2937;border:2px solid #86efac;box-shadow:6px 6px 0 #080d17;padding:22px;border-radius:8px}
+#eqCloudCard h2{color:#86efac;margin-bottom:8px}#eqCloudCard p{color:#d1d5db;font-size:.88rem}#eqCloudStatus{font-size:.8rem;color:#facc15;min-height:1.4em;margin-top:10px}
+#eqCloudGate button{width:100%;margin-top:10px}#eqCloudGate input{margin:6px 0}
 </style>
 </head>
 <body>
+<div id="eqCloudGate"><div id="eqCloudCard"><h2>☁️ English Quest na nuvem</h2><p id="eqCloudIntro">Entre com seu e-mail para sincronizar seu progresso entre computador e celular. Você só precisa fazer isso uma vez em cada dispositivo.</p><div id="eqCloudLogin"><label for="eqCloudEmail">Seu e-mail</label><input id="eqCloudEmail" type="email" autocomplete="email" placeholder="voce@email.com"><button class="primary" id="eqCloudSend">Enviar link de acesso</button></div><div id="eqCloudStatus">Conectando...</div></div></div>
+
 <div class="shell">
  <header class="top">
   <div class="brand"><div class="pixel-icon" aria-hidden="true">🗡️</div><div><h1>ENGLISH QUEST</h1><div class="subtitle">DAILY MISSIONS · A1 PLAYER MODE</div></div></div>
@@ -147,7 +154,7 @@ footer{margin-top:20px;color:var(--muted);font-size:.7rem;text-align:center}
    <div class="pet-details">
     <div class="pet-stat"><span>✨ XP acumulado</span><strong id="petXP">0 XP</strong></div>
     <div class="pet-stat"><span>💚 Carinho recebido</span><strong id="petBondNumber">0</strong></div>
-    <label for="petCustomName">✏️ Nome do mascote</label><input id="petCustomName" maxlength="18" placeholder="Ex.: Pip"><button id="createPetBtn" class="primary" type="button">🥚 Criar meu pet</button><div class="mini-note" id="petCreateStatus">Escolha um nome e clique em “Criar meu pet”.</div>
+    <label for="petCustomName">✏️ Nome do mascote</label><input id="petCustomName" maxlength="18" placeholder="Ex.: Pip">
     <label for="petRace">🐾 Espécie / raça</label><select id="petRace"><option value="dragon">🐉 Dragão</option><option value="cat">🐱 Gato mágico</option><option value="fox">🦊 Raposa</option><option value="axolotl">🩷 Axolote</option><option value="unicorn">🦄 Unicórnio</option><option value="bunny">🐰 Coelhinho</option></select>
     <label for="petColor">🎨 Cor do mascote</label><select id="petColor"><option value="normal">🌈 Original</option><option value="pink">🩷 Rosa mágico</option><option value="blue">💙 Azul oceano</option><option value="purple">💜 Roxo encantado</option><option value="green">💚 Verde floresta</option><option value="gold">💛 Dourado</option><option value="rainbow">🌈 Arco-íris</option></select>
     <label for="petPersonality">✨ Personalidade</label><select id="petPersonality"><option value="curious">🔎 Curioso</option><option value="brave">🛡️ Corajoso</option><option value="sweet">💗 Carinhoso</option><option value="sleepy">🌙 Dorminhoco</option><option value="playful">🎾 Brincalhão</option></select>
@@ -156,20 +163,6 @@ footer{margin-top:20px;color:var(--muted);font-size:.7rem;text-align:center}
     <div class="mini-note" id="petUnlockHint">Complete missões para desbloquear novos acessórios.</div>
     <div class="pet-care-grid"><div><span class="mini-note">😊 Felicidade</span><div class="pet-meter"><span id="petHappyBar"></span></div><strong id="petHappyText">50/100</strong></div><div><span class="mini-note">⚡ Energia</span><div class="pet-meter"><span id="petEnergyBar"></span></div><strong id="petEnergyText">70/100</strong></div><div><span class="mini-note">🍓 Fome</span><div class="pet-meter"><span id="petFoodBar"></span></div><strong id="petFoodText">60/100</strong></div></div>
     <div class="pet-actions"><button id="petFeedBtn">🍓 Alimentar</button><button id="petPlayBtn">🎾 Brincar</button><button id="petStudyBtn">📚 Estudar juntos</button></div>
-    <div class="pet-shop">
-     <h3>🛍️ Lojinha do mascote</h3><p class="mini-note">Compre com XP e guarde no estoque para alimentar seu pet quando quiser.</p>
-     <div class="pet-shop-grid">
-      <div class="pet-shop-item"><span>🍎</span><strong>Maçã crocante</strong><small>+20 de fome · 10 XP</small><button type="button" data-buy-food="apple">Comprar</button><small id="stock-apple">Estoque: 0</small><button type="button" data-use-food="apple">Dar ao pet</button></div>
-      <div class="pet-shop-item"><span>🍌</span><strong>Banana docinha</strong><small>+25 de fome · 12 XP</small><button type="button" data-buy-food="banana">Comprar</button><small id="stock-banana">Estoque: 0</small><button type="button" data-use-food="banana">Dar ao pet</button></div>
-      <div class="pet-shop-item"><span>🥣</span><strong>Ração especial</strong><small>+40 de fome · 20 XP</small><button type="button" data-buy-food="kibble">Comprar</button><small id="stock-kibble">Estoque: 0</small><button type="button" data-use-food="kibble">Dar ao pet</button></div>
-      <div class="pet-shop-item"><span>🫐</span><strong>Frutinhas mágicas</strong><small>+35 de fome · 18 XP</small><button type="button" data-buy-food="berries">Comprar</button><small id="stock-berries">Estoque: 0</small><button type="button" data-use-food="berries">Dar ao pet</button></div>
-      <div class="pet-shop-item"><span>🐟</span><strong>Peixinho grelhado</strong><small>+50 de fome · 25 XP</small><button type="button" data-buy-food="fish">Comprar</button><small id="stock-fish">Estoque: 0</small><button type="button" data-use-food="fish">Dar ao pet</button></div>
-      <div class="pet-shop-item"><span>🍪</span><strong>Biscoito arco-íris</strong><small>+55 de fome · 28 XP</small><button type="button" data-buy-food="cookie">Comprar</button><small id="stock-cookie">Estoque: 0</small><button type="button" data-use-food="cookie">Dar ao pet</button></div>
-      <div class="pet-shop-item"><span>🍰</span><strong>Bolo mágico</strong><small>+70 de fome · 35 XP</small><button type="button" data-buy-food="cake">Comprar</button><small id="stock-cake">Estoque: 0</small><button type="button" data-use-food="cake">Dar ao pet</button></div>
-      <div class="pet-shop-item"><span>🌟</span><strong>Banquete dourado</strong><small>+100 de fome · 50 XP</small><button type="button" data-buy-food="feast">Comprar</button><small id="stock-feast">Estoque: 0</small><button type="button" data-use-food="feast">Dar ao pet</button></div>
-     </div>
-     <div class="mini-note" id="petShopMessage">Seu estoque está esperando pelas primeiras comprinhas!</div>
-    </div>
     <button id="petPatBtn" class="primary">💚 Dar carinho</button><div class="notice" id="petMessage">Seu ovo mágico está esperando para evoluir!</div>
    </div>
   </div>
@@ -227,6 +220,44 @@ footer{margin-top:20px;color:var(--muted);font-size:.7rem;text-align:center}
   <div class="actions"><button value="cancel">Cancelar</button><button class="primary" id="saveRewardBtn" value="save">Salvar prêmio</button></div>
  </form>
 </dialog>
+
+<script>
+(()=>{
+'use strict';
+const SUPABASE_URL='https://ckipommsxhcgwjenezcf.supabase.co';
+const SUPABASE_KEY='sb_publishable_hbqLhRBf7S-ENyU3vtX5Bg_5xFDRTAA';
+const TABLE='eq_user_state';
+const KEYS=['englishQuestA1_v1','englishQuestNotebook_v1','englishQuestPets_v1'];
+const gate=document.getElementById('eqCloudGate'),status=document.getElementById('eqCloudStatus'),login=document.getElementById('eqCloudLogin');
+const originalSet=Storage.prototype.setItem;
+let client,userId,hydrating=true,saveTimer=null,lastCloudStamp='',channel=null;
+const say=t=>{status.textContent=t};
+function localState(){const out={};for(const k of KEYS){try{const v=localStorage.getItem(k);if(v!==null)out[k]=JSON.parse(v)}catch{}}return out}
+function applyState(obj){for(const k of KEYS){if(obj&&Object.prototype.hasOwnProperty.call(obj,k))originalSet.call(localStorage,k,JSON.stringify(obj[k]));}}
+async function saveCloud(){if(!userId||hydrating)return;const payload=localState();const stamp=new Date().toISOString();const {error}=await client.from(TABLE).upsert({user_id:userId,state:payload,updated_at:stamp},{onConflict:'user_id'});if(error){say('Não foi possível sincronizar: '+error.message);return}lastCloudStamp=stamp;say('☁️ Sincronizado agora')}
+function scheduleSave(){if(hydrating||!userId)return;clearTimeout(saveTimer);saveTimer=setTimeout(saveCloud,700)}
+Storage.prototype.setItem=function(k,v){originalSet.call(this,k,v);if(KEYS.includes(String(k)))scheduleSave()};
+async function start(){client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ const {data:{session}}=await client.auth.getSession();
+ if(!session){login.style.display='block';say('Informe seu e-mail para receber o link de acesso.');document.getElementById('eqCloudSend').onclick=async()=>{const email=document.getElementById('eqCloudEmail').value.trim();if(!email){say('Digite seu e-mail.');return}say('Enviando link...');const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:location.href}});say(error?'Erro: '+error.message:'Link enviado! Abra seu e-mail neste dispositivo e toque no link.');};return}
+ userId=session.user.id;login.style.display='none';say('Carregando seu progresso...');
+ const {data,error}=await client.from(TABLE).select('state,updated_at').eq('user_id',userId).maybeSingle();
+ if(error){say('Erro ao acessar a tabela '+TABLE+': '+error.message+' — verifique a tabela e as políticas RLS.');return}
+ if(data&&data.state){const before=JSON.stringify(localState());const incoming=JSON.stringify(data.state);lastCloudStamp=data.updated_at||'';if(before!==incoming){applyState(data.state);sessionStorage.setItem('eqCloudHydratedStamp',lastCloudStamp);location.reload();return;}}
+ else {await saveCloud();}
+ hydrating=false;gate.style.display='none';
+ channel=client.channel('eq-state-'+userId).on('postgres_changes',{event:'UPDATE',schema:'public',table:TABLE,filter:'user_id=eq.'+userId},payload=>{
+  const row=payload.new;if(!row||!row.state||row.updated_at===lastCloudStamp)return;
+  // A alteração remota substitui o estado local e recarrega a interface sem perder a sessão.
+  hydrating=true;applyState(row.state);lastCloudStamp=row.updated_at||'';sessionStorage.setItem('eqCloudReloadStamp',lastCloudStamp);location.reload();
+ }).subscribe();
+ // Realtime não cobre todas as configurações de projeto; uma conferência periódica serve de fallback.
+ setInterval(async()=>{if(!userId||document.hidden)return;const {data}=await client.from(TABLE).select('state,updated_at').eq('user_id',userId).maybeSingle();if(data&&data.updated_at&&data.updated_at!==lastCloudStamp){hydrating=true;applyState(data.state);lastCloudStamp=data.updated_at;location.reload()}},12000);
+}
+clientReady();
+async function clientReady(){try{await start()}catch(e){say('Falha na conexão: '+(e?.message||e))}}
+})();
+</script>
 
 <script>
 (() => {
@@ -421,8 +452,7 @@ const NOTE_KEY='englishQuestNotebook_v1',PET_KEY='englishQuestPets_v1';
 const $=id=>document.getElementById(id);const today=()=>new Date().toISOString().slice(0,10);
 let notes={dictionary:[],rules:[],diary:[],errors:[],speaking:[],reading:[],goals:[]};
 try{notes={...notes,...JSON.parse(localStorage.getItem(NOTE_KEY)||'{}')}}catch{}
-let pet={id:'foxy',name:'',race:'dragon',color:'normal',accessory:'none',bond:0,happiness:50,energy:70,food:60,personality:'curious',habitat:'forest',created:false,unlockedHabitats:['forest'],spentXP:0,inventory:{apple:0,banana:0,kibble:0,berries:0,fish:0,cookie:0,cake:0,feast:0}};try{pet={...pet,...JSON.parse(localStorage.getItem(PET_KEY)||'{}')}}catch{}
-pet.unlockedHabitats=Array.isArray(pet.unlockedHabitats)?[...new Set(['forest',...pet.unlockedHabitats])]:['forest'];pet.spentXP=Math.max(0,Number(pet.spentXP)||0);pet.inventory={apple:0,banana:0,kibble:0,berries:0,fish:0,cookie:0,cake:0,feast:0,...(pet.inventory||{})};pet.mapRewardsClaimed=Array.isArray(pet.mapRewardsClaimed)?pet.mapRewardsClaimed:[];
+let pet={id:'foxy',bond:0,happiness:50,energy:70,food:60,personality:'curious',habitat:'forest'};try{pet={...pet,...JSON.parse(localStorage.getItem(PET_KEY)||'{}')}}catch{}
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function saveNotes(){localStorage.setItem(NOTE_KEY,JSON.stringify(notes))}
 function list(id,arr,renderer){$(id).innerHTML=arr.length?arr.slice().reverse().map((x,i)=>`<div class="notebook-entry">${renderer(x,arr.length-1-i)} <div style="margin-top:8px"><button class="small danger" data-remove="${id}" data-index="${arr.length-1-i}">Excluir</button></div></div>`).join(''):'<div class="empty">Nada anotado ainda. Adicione seu primeiro registro!</div>'}
@@ -450,19 +480,14 @@ const petStages=[
 const accessories={none:{emoji:'',xp:0},bow:{emoji:'🎀',xp:25},glasses:{emoji:'🤓',xp:50},flower:{emoji:'🌸',xp:75},crown:{emoji:'👑',xp:100},scarf:{emoji:'🧣',xp:150},star:{emoji:'⭐',xp:250},cape:{emoji:'🦸',xp:350},bell:{emoji:'🔔',xp:400},wings:{emoji:'🪽',xp:500},moon:{emoji:'🌙',xp:650},halo:{emoji:'😇',xp:900},crown2:{emoji:'💎',xp:1200}};
 const races={dragon:{name:'Dragão',stages:['🥚','🐣','🐲','🐉','🐉']},cat:{name:'Gato mágico',stages:['🥚','🐱','🐈','🐈‍⬛','🐈‍⬛']},fox:{name:'Raposa',stages:['🥚','🦊','🦊','🦊','🦊']},axolotl:{name:'Axolote',stages:['🥚','🩷','🦎','🩷','🩷']},unicorn:{name:'Unicórnio',stages:['🥚','🦄','🦄','🦄','🦄']},bunny:{name:'Coelhinho',stages:['🥚','🐰','🐇','🐇','🐇']}};
 const colors={normal:'none',pink:'hue-rotate(300deg) saturate(1.2)',blue:'hue-rotate(170deg) saturate(1.4)',purple:'hue-rotate(230deg) saturate(1.3)',green:'hue-rotate(80deg) saturate(1.4)',gold:'sepia(1) saturate(2) hue-rotate(350deg)',rainbow:'hue-rotate(130deg) saturate(1.8)'};
-const personalities={curious:'curioso 🔎',brave:'corajoso 🛡️',sweet:'carinhoso 💗',sleepy:'dorminhoco 🌙',playful:'brincalhão 🎾'};
-const habitats={forest:{name:'Floresta mágica',emoji:'🌳',xp:0,background:'radial-gradient(circle at 50% 35%,#315c49 0,#172f2a 58%,#101827 100%)'},cloud:{name:'Nuvem fofinha',emoji:'☁️',xp:100,background:'radial-gradient(circle at 50% 35%,#64748b 0,#34445b 58%,#101827 100%)'},ocean:{name:'Fundo do mar',emoji:'🌊',xp:175,background:'radial-gradient(circle at 50% 35%,#075985 0,#12304a 58%,#101827 100%)'},space:{name:'Espaço sideral',emoji:'🌌',xp:300,background:'radial-gradient(circle at 50% 35%,#4c1d95 0,#251a46 58%,#101827 100%)'},candy:{name:'Reino doce',emoji:'🍬',xp:400,background:'radial-gradient(circle at 50% 35%,#9d477e 0,#54284f 58%,#101827 100%)'},volcano:{name:'Vulcão do dragão',emoji:'🌋',xp:550,background:'radial-gradient(circle at 50% 35%,#9a3412 0,#4c1d25 58%,#101827 100%)'}};
-function availableXP(){return Math.max(0,gameXP()-(Number(pet.spentXP)||0))}
-function updateHabitatOptions(){const select=$('petHabitat'),current=pet.habitat||'forest';select.innerHTML=Object.entries(habitats).map(([id,h])=>{const unlocked=pet.unlockedHabitats.includes(id);const label=id==='forest'?`${h.emoji} ${h.name} · grátis`:unlocked?`${h.emoji} ${h.name} · desbloqueado`:`🔒 ${h.emoji} ${h.name} · ${h.xp} XP`;return `<option value="${id}">${esc(label)}</option>`}).join('');select.value=current}
-function buyHabitat(id){const h=habitats[id];if(!h)return false;if(pet.unlockedHabitats.includes(id))return true;const balance=availableXP();if(balance<h.xp){alert(`Você precisa de ${h.xp} XP disponíveis para desbloquear ${h.name}. Você tem ${balance} XP.`);return false}if(!confirm(`Desbloquear ${h.name} por ${h.xp} XP? Depois de desbloqueado, ele continuará disponível.`))return false;pet.spentXP+=h.xp;pet.unlockedHabitats.push(id);pet.habitat=id;savePet();alert(`${h.name} desbloqueado! 🎉`);return true}
 function gameXP(){try{const st=JSON.parse(localStorage.getItem('englishQuestA1_v1')||'{}');return Object.entries(st.days||{}).reduce((sum,[k,d])=>sum+Object.entries(d.completed||{}).reduce((s,[id,done])=>s+(done?(Number(d.awardedXP?.[id])||Number(st.missions?.find(m=>m.id===id)?.xp)||0):0),0),0)}catch{return 0}}
 function renderPetJourney(){
- const xp=gameXP(),balance=availableXP();$('journeyXP').textContent=xp+' XP';$('petXP').textContent=balance+' XP disponíveis';$('petBond').textContent='Laço: '+pet.bond;$('petBondNumber').textContent=pet.bond;
+ const xp=gameXP();$('journeyXP').textContent=xp+' XP';$('petXP').textContent=xp+' XP';$('petBond').textContent='Laço: '+pet.bond;$('petBondNumber').textContent=pet.bond;
  const stageIndex=petStages.reduce((idx,st,i)=>xp>=st.xp?i:idx,0),stage=petStages[stageIndex];
- const race=pet.race||'dragon',raceInfo=races[race]||races.dragon,accessory=pet.accessory||'none';if(!pet.unlockedHabitats.includes(pet.habitat||'forest'))pet.habitat='forest';
+ const race=pet.race||'dragon',raceInfo=races[race]||races.dragon,accessory=pet.accessory||'none';
  pet.happiness=Math.max(0,Math.min(100,Number(pet.happiness??50)));pet.energy=Math.max(0,Math.min(100,Number(pet.energy??70)));pet.food=Math.max(0,Math.min(100,Number(pet.food??60)));
- const activeHabitat=habitats[pet.habitat||'forest']||habitats.forest;$('petStage').style.background=activeHabitat.background;$('petPersonality').value=pet.personality||'curious';updateHabitatOptions();$('petCreateStatus').textContent=pet.created?'✅ Pet criado! Você pode mudar o nome, a espécie e a aparência quando quiser.':'Escolha um nome e clique em “Criar meu pet”.';$('createPetBtn').textContent=pet.created?'✅ Pet criado':'🥚 Criar meu pet';$('createPetBtn').disabled=!!pet.created;
- Object.keys(pet.inventory||{}).forEach(id=>{const stock=$('stock-'+id);if(stock)stock.textContent='Estoque: '+(Number(pet.inventory[id])||0);document.querySelectorAll(`[data-use-food="${id}"]`).forEach(btn=>btn.disabled=(Number(pet.inventory[id])||0)<=0)});$('petHappyBar').style.width=pet.happiness+'%';$('petHappyText').textContent=pet.happiness+'/100';$('petEnergyBar').style.width=pet.energy+'%';$('petEnergyText').textContent=pet.energy+'/100';$('petFoodBar').style.width=pet.food+'%';$('petFoodText').textContent=pet.food+'/100';
+ $('petStage').style.background=habitats[pet.habitat||'forest'];$('petPersonality').value=pet.personality||'curious';$('petHabitat').value=pet.habitat||'forest';
+ $('petHappyBar').style.width=pet.happiness+'%';$('petHappyText').textContent=pet.happiness+'/100';$('petEnergyBar').style.width=pet.energy+'%';$('petEnergyText').textContent=pet.energy+'/100';$('petFoodBar').style.width=pet.food+'%';$('petFoodText').textContent=pet.food+'/100';
  const chosenAccessory=accessories[accessory]||accessories.none;
  $('petBig').textContent=raceInfo.stages[stageIndex]+(chosenAccessory.emoji?' '+chosenAccessory.emoji:'');
  $('petBig').style.filter=(colors[pet.color||'normal']&&colors[pet.color||'normal']!=='none'?colors[pet.color||'normal']+' ':'')+'drop-shadow(4px 5px 0 #080d17)';
@@ -474,34 +499,20 @@ function renderPetJourney(){
  accessorySelect.value=pet.accessory||'none';
  const nextAccessory=Object.entries(accessories).find(([id,item])=>id!=='none'&&xp<item.xp);
  $('petUnlockHint').textContent=nextAccessory?`Próximo acessório: ${nextAccessory[1].emoji} ${nextAccessory[1].xp} XP · faltam ${nextAccessory[1].xp-xp} XP.`:'🏆 Todos os acessórios desbloqueados!';
- const stops=[
-  {name:'Vila A1',emoji:'🏡',xp:0,desc:'Suas primeiras palavras',food:'apple',foodName:'Maçã crocante',foodEmoji:'🍎'},
-  {name:'Floresta das Palavras',emoji:'🌳',xp:100,desc:'Descubra vocabulário novo',food:'banana',foodName:'Banana docinha',foodEmoji:'🍌'},
-  {name:'Ponte da Gramática',emoji:'🌉',xp:250,desc:'Conecte frases e ideias',food:'kibble',foodName:'Ração especial',foodEmoji:'🥣'},
-  {name:'Castelo da Leitura',emoji:'🏰',xp:500,desc:'Explore histórias em inglês',food:'cake',foodName:'Bolo mágico',foodEmoji:'🍰'},
-  {name:'Montanha da Fluência',emoji:'🏔️',xp:900,desc:'O topo da sua aventura',food:'feast',foodName:'Banquete dourado',foodEmoji:'🌟'}
- ];
- // Entrega cada prêmio uma única vez, inclusive ao carregar um progresso já avançado.
- let receivedMapReward=false;
- stops.forEach(stop=>{if(xp>=stop.xp&&!pet.mapRewardsClaimed.includes(stop.name)){pet.inventory[stop.food]=(Number(pet.inventory[stop.food])||0)+1;pet.mapRewardsClaimed.push(stop.name);receivedMapReward=true;}});
- if(receivedMapReward){try{localStorage.setItem(PET_KEY,JSON.stringify(pet));}catch(e){}}
- const currentIndex=stops.reduce((idx,stop,i)=>xp>=stop.xp?i:idx,0);$('journeyStops').innerHTML=stops.map((stop,i)=>{const unlocked=xp>=stop.xp;return `<div class="journey-stop ${unlocked?'unlocked':''} ${i===currentIndex?'current':''}"><span class="stop-icon">${unlocked?stop.emoji:'🔒'}</span><div><strong>${stop.name}</strong><div class="mini-note">${stop.desc}</div><div class="mini-note">${unlocked?'✓ Desbloqueada':stop.xp+' XP necessários'}</div><div class="mini-note">🎁 ${stop.foodEmoji} ${stop.foodName} · ${unlocked?'prêmio recebido':'prêmio ao desbloquear'}</div></div></div>`}).join('');
+ const stops=[{name:'Vila A1',emoji:'🏡',xp:0,desc:'Suas primeiras palavras'},{name:'Floresta das Palavras',emoji:'🌳',xp:100,desc:'Descubra vocabulário novo'},{name:'Ponte da Gramática',emoji:'🌉',xp:250,desc:'Conecte frases e ideias'},{name:'Castelo da Leitura',emoji:'🏰',xp:500,desc:'Explore histórias em inglês'},{name:'Montanha da Fluência',emoji:'🏔️',xp:900,desc:'O topo da sua aventura'}];
+ const currentIndex=stops.reduce((idx,stop,i)=>xp>=stop.xp?i:idx,0);$('journeyStops').innerHTML=stops.map((stop,i)=>`<div class="journey-stop ${xp>=stop.xp?'unlocked':''} ${i===currentIndex?'current':''}"><span class="stop-icon">${xp>=stop.xp?stop.emoji:'🔒'}</span><div><strong>${stop.name}</strong><div class="mini-note">${stop.desc}</div><div class="mini-note">${xp>=stop.xp?'✓ Desbloqueada':stop.xp+' XP necessários'}</div></div></div>`).join('');
  const next=stops.find(stop=>xp<stop.xp);const prev=next?(stops.filter(stop=>stop.xp<next.xp).slice(-1)[0]?.xp||0):900;$('journeyProgressFill').style.width=(next?Math.max(0,Math.min(100,(xp-prev)/(next.xp-prev)*100)):100)+'%';$('journeyProgressText').textContent=next?`Próxima parada: ${next.name} · faltam ${next.xp-xp} XP`:'🏆 Você chegou ao topo da jornada!';
 }
-function savePet(){try{localStorage.setItem(PET_KEY,JSON.stringify(pet))}catch(e){alert('Não foi possível salvar o mascote neste navegador.')}renderPetJourney()}
+function savePet(){localStorage.setItem(PET_KEY,JSON.stringify(pet));renderPetJourney()}
 $('petAccessory').addEventListener('change',e=>{const item=accessories[e.target.value]||accessories.none;if(gameXP()<item.xp){alert(`Você precisa de ${item.xp} XP para desbloquear esse acessório.`);e.target.value=pet.accessory||'none';return}pet.accessory=e.target.value;savePet()});
 $('petRace').addEventListener('change',e=>{pet.race=e.target.value;savePet()});
 $('petColor').addEventListener('change',e=>{pet.color=e.target.value;savePet()});
-$('petPersonality').addEventListener('change',e=>{pet.personality=e.target.value;savePet();$('petMessage').textContent='Seu pet é '+(personalities[pet.personality]||personalities.curious)+'!'});
-$('petHabitat').addEventListener('change',e=>{const id=e.target.value;if(!pet.unlockedHabitats.includes(id)&&!buyHabitat(id)){updateHabitatOptions();return}pet.habitat=id;savePet()});
+$('petPersonality').addEventListener('change',e=>{pet.personality=e.target.value;savePet();$('petMessage').textContent='Seu pet é '+personalities[pet.personality]+'!'});
+$('petHabitat').addEventListener('change',e=>{pet.habitat=e.target.value;savePet()});
 function petCare(field,amount,message,energyCost=0){pet[field]=Math.max(0,Math.min(100,Number(pet[field]??50)+amount));if(energyCost)pet.energy=Math.max(0,pet.energy-energyCost);pet.bond=(Number(pet.bond)||0)+1;localStorage.setItem(PET_KEY,JSON.stringify(pet));renderPetJourney();$('petMessage').textContent=message}
-$('petFeedBtn').addEventListener('click',()=>{$('petShopMessage').textContent='Escolha uma comida na lojinha, compre com XP e depois clique em “Dar ao pet”. 🛍️';document.querySelector('.pet-shop').scrollIntoView({behavior:'smooth',block:'nearest'})});
+$('petFeedBtn').addEventListener('click',()=>{if(pet.food>=100){$('petMessage').textContent='Seu pet está de barriguinha cheia! 💗';return}petCare('food',20,'Nhac nhac! Seu pet adorou o lanchinho 🍓')});
 $('petPlayBtn').addEventListener('click',()=>{if(pet.energy<10){$('petMessage').textContent='Seu pet precisa descansar antes de brincar. 🌙';return}petCare('happiness',15,'Que diversão! Vocês brincaram juntos 🎾',10)});
 $('petStudyBtn').addEventListener('click',()=>{petCare('happiness',10,'Estudar com você deixa seu pet orgulhoso! 📚',5)});
-const petFoods={apple:{name:'Maçã crocante',price:10,hunger:20,emoji:'🍎'},banana:{name:'Banana docinha',price:12,hunger:25,emoji:'🍌'},kibble:{name:'Ração especial',price:20,hunger:40,emoji:'🥣'},berries:{name:'Frutinhas mágicas',price:18,hunger:35,emoji:'🫐'},fish:{name:'Peixinho grelhado',price:25,hunger:50,emoji:'🐟'},cookie:{name:'Biscoito arco-íris',price:28,hunger:55,emoji:'🍪'},cake:{name:'Bolo mágico',price:35,hunger:70,emoji:'🍰'},feast:{name:'Banquete dourado',price:50,hunger:100,emoji:'🌟'}};
-document.querySelectorAll('[data-buy-food]').forEach(btn=>btn.addEventListener('click',()=>{const id=btn.dataset.buyFood,item=petFoods[id],balance=availableXP();if(!item)return;if(balance<item.price){$('petShopMessage').textContent=`XP insuficiente! ${item.name} custa ${item.price} XP; você tem ${balance} XP.`;return}pet.spentXP=(Number(pet.spentXP)||0)+item.price;pet.inventory[id]=(Number(pet.inventory[id])||0)+1;savePet();$('petShopMessage').textContent=`${item.emoji} ${item.name} comprado! Agora há ${pet.inventory[id]} no estoque.`}));
-document.querySelectorAll('[data-use-food]').forEach(btn=>btn.addEventListener('click',()=>{const id=btn.dataset.useFood,item=petFoods[id];if(!item||(Number(pet.inventory[id])||0)<=0)return;if(pet.food>=100){$('petShopMessage').textContent='Seu pet está de barriguinha cheia! Espere ele sentir fome.';return}pet.inventory[id]--;pet.food=Math.min(100,(Number(pet.food)||0)+item.hunger);pet.bond=(Number(pet.bond)||0)+1;savePet();$('petMessage').textContent=`${item.emoji} Nhac nhac! ${item.name} deixou seu pet feliz!`;$('petShopMessage').textContent=`Você usou ${item.name}. Estoque atualizado.`}));
-$('createPetBtn').addEventListener('click',()=>{if(pet.created)return;const typedName=$('petCustomName').value.trim().slice(0,18);if(!typedName){alert('Dê um nome para seu mascote antes de criá-lo.');$('petCustomName').focus();return}pet.name=typedName;pet.race=$('petRace').value;pet.color=$('petColor').value;pet.personality=$('petPersonality').value;pet.habitat='forest';pet.created=true;if(!pet.unlockedHabitats.includes('forest'))pet.unlockedHabitats.unshift('forest');savePet();$('petMessage').textContent=`✨ ${pet.name} nasceu! Cuide dele e complete missões para desbloquear novos cantinhos.`});
 $('petCustomName').addEventListener('change',e=>{pet.name=e.target.value.trim().slice(0,18);savePet()});
 $('petPatBtn').addEventListener('click',()=>{pet.bond++;pet.happiness=Math.min(100,(Number(pet.happiness)||50)+8);localStorage.setItem(PET_KEY,JSON.stringify(pet));renderPetJourney();$('petMessage').textContent='Carinho recebido! Seu mascote está feliz 💚'});
 renderNotes();renderPetJourney();window.addEventListener('focus',renderPetJourney);setInterval(renderPetJourney,5000);
